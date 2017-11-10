@@ -94,6 +94,7 @@ public class LoginServlet extends HttpServlet {
 		// allowing for configurable login attempts here in case network setups are such that all users have the same IP address. 
 		if (allowedLockoutAttempts > 0 && loginAttempts > allowedLockoutAttempts) {
 			lockedOut = true;
+			info.log("Invalid number of connection attempts. Please try again later.");
 			
 			Date lockedOutTime = lockoutDateByIP.get(ipAddress);
 			if (lockedOutTime != null && System.currentTimeMillis() - lockedOutTime.getTime() > 300000) {
@@ -178,7 +179,7 @@ public class LoginServlet extends HttpServlet {
 			catch (ContextAuthenticationException e) {
 				// set the error message for the user telling them
 				// to try again
-				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "auth.password.invalid");
+				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, e.getMessage());
 			}
 			
 		}
